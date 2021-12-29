@@ -7,7 +7,7 @@ cf = "https://wowless-pxnmni7wma-uc.a.run.app/wowless"
 fre = re.compile(r"addons/(\d+)-(\w+).zip$")
 parent = "projects/www-wowless-dev/locations/us-central1/queues/wowless"
 sa = "wowless-invoker@www-wowless-dev.iam.gserviceaccount.com"
-projects = {
+products = {
     "Mainline": "wow",
     "TBC": "wow_classic",
     "Vanilla": "wow_classic_era",
@@ -19,7 +19,7 @@ def parse_filename(name):
     if match is None:
         return None
     addon, version = match.group(1, 2)
-    return projects[version], addon
+    return products[version], addon
 
 
 async def do_publish():
@@ -38,11 +38,11 @@ async def do_publish():
                             "audience": cf,
                             "service_account_email": sa,
                         },
-                        "url": f"{cf}?project={proj}&addon={addon}&loglevel=1",
+                        "url": f"{cf}?product={prod}&addon={addon}&loglevel=1",
                     }
                 },
             )
-            for (proj, addon) in filter(
+            for (prod, addon) in filter(
                 lambda x: x is not None,
                 map(
                     parse_filename,
